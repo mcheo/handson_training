@@ -1,0 +1,33 @@
+{
+   "policy":{
+      "name":"dvwa",
+      "template":{
+         "name":"POLICY_TEMPLATE_NGINX_BASE"
+      },
+      "applicationLanguage":"utf-8",
+      "enforcementMode":"blocking",
+      "response-pages":[
+         {
+            "responseContent":"<html><head><title>Custom Reject Page</title></head><body><img src=\"https://i.imgur.com/6EOytpC.gif\" alt=\"Jurassic Hacker\"><br><br>This is a custom response page, it is supposed to overwrite the default page with custom text.<br><br>Your support ID is: <%TS.request.ID()%><br><br><a href='javascript:history.back();'>[Go Back]</a></body></html>",
+            "responseHeader":"HTTP/1.1 302 OK\\r\\nCache-Control: no-cache\\r\\nPragma: no-cache\\r\\nConnection: close",
+            "responseActionType":"custom",
+            "responsePageType":"default"
+         }
+      ],
+      "blocking-settings":{
+         "violations":[
+            {
+               "name":"VIOL_HTTP_PROTOCOL",
+               "alarm":true,
+               "block":false
+            }
+         ],
+         "http-protocols":[
+            {
+               "description":"Bad host header value",
+               "enabled":true
+            }
+         ]
+      }
+   }
+}

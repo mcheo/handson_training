@@ -1,0 +1,61 @@
+## CONTROLLER ##
+
+Install Pre-Req
+
+        su - ubuntu
+	sudo apt-get update
+
+	sudo apt-get install jq -y
+	sudo apt-get install socat -y
+	sudo apt-get install conntrack -y
+
+        cd /opt/
+	sudo tar xvzf controller-installer-3.12.1.tar.gz
+
+	cd controller-installer
+	./install.sh
+
+	y # Requires Docker CE to be installed ?
+
+	y # Do you want to use an embedded DB?
+
+	local # Provide config DB Volume type
+	local # Provide time series DB volume type
+
+	y # Do you accept the License Agreement
+
+	SMTP Details
+	example.com
+	25
+	n
+	n
+	donotreply@example.com
+
+	ADMIN User
+	10.1.1.4
+	admin
+	admin
+	admin@f5.com
+	Welcome@123
+	y # Generate SSL Certificate
+
+Update License File
+
+Create User
+
+Platform >> Users >> + Create
+User: initial.lastname@f5.com
+Password: Ensure it's a long password, example Passw0rd2021
+
+
+Navigate Controller:
+
+Install Controller Agent:
+Infrastructure >> Create Instance >> Add an existing instance
+Name: lb.nplus1.udf
+Location: Unspecified
+Check - Allow insecure server connections
+Copy the CURL script and run on the nplus_1 VM
+
+Create Load Balancer:
+Environment >> Create Environment
