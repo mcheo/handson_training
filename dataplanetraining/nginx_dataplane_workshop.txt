@@ -317,6 +317,7 @@ Install & Configure APP Protect
 	sudo service nginx start
 
 "Configure NAP"
+##Alternatively, use nap.conf file
 
 	cd /etc/nginx/conf.d/
 	sudo vi nap_dvwa.conf
