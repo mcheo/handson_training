@@ -1,0 +1,426 @@
+{
+	"info": {
+		"_postman_id": "ca00b716-9a7e-42e2-83e7-d25453b3de14",
+		"name": "Controller-training",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1) Login to Controller - admin",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "3eec00f2-233a-4bf3-9b39-ce4df3437ff5",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"credentials\": {\r\n\t\t\"type\": \"BASIC\",\r\n\t\t\"username\": \"heather@ec2-13-56-156-20.us-west-1.compute.amazonaws.com\",\r\n\t\t\"password\": \"Password2020\"\r\n\t}\r\n}"
+				},
+				"url": {
+					"raw": "https://{{host}}/api/v1/platform/login",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"platform",
+						"login"
+					]
+				},
+				"description": "Returns a cookie / authentication token\n"
+			},
+			"response": []
+		},
+		{
+			"name": "2) Get License Info",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{host}}/api/v1/platform/license",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"platform",
+						"license"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3) Get Instances",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fbbd6f1f-0492-4127-a66b-edb62f1886e9",
+						"exec": [
+							"var template = `",
+							"    <style type=\"text/css\">",
+							"        .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}",
+							"        .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}",
+							"        .tftable tr {background-color:#ffffff;}",
+							"        .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}",
+							"        .tftable tr:hover {background-color:#e0ffff;}",
+							"    </style>",
+							"    ",
+							"    <table class=\"tftable\" border=\"1\">",
+							"        <tr>",
+							"            <th>Hostname</th>",
+							"            <th>Display Name</th>",
+							"            <th>Instance ID</th>",
+							"            <th>Build</th>",
+							"            <th>Addresses</th>",
+							"        </tr>",
+							"        ",
+							"        {{#each response.items}}",
+							"            <tr id=row_{{@key}} onClick=\"handleClick(this.id)\">",
+							"                <td id={{@key}}>{{currentStatus.hostname}}</td>",
+							"                <td>{{metadata.displayName}}</td>",
+							"                <td>{{metadata.name}}</td>",
+							"                <td>{{currentStatus.legacyNginxMetadata.build}}</td>",
+							"                <td>{{#each currentStatus.legacySystemMetadata.network.interfaces}} ({{ipv4.address}}) {{/each}}</td>",
+							"            </tr>",
+							"        {{/each}}",
+							"    </table>",
+							"",
+							"`;",
+							"",
+							"pm.visualizer.set(template, {",
+							"    response: pm.response.json()",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{host}}/api/v1/infrastructure/locations/unspecified/instances",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"infrastructure",
+						"locations",
+						"unspecified",
+						"instances"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4) Create Env - test-env",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"metadata\": {\n        \"name\": \"test-env\",\n        \"displayName\": \"Test Environment\"\n    }\n}"
+				},
+				"url": {
+					"raw": "https://{{host}}/api/v1/services/environments/test-env",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"services",
+						"environments",
+						"test-env"
+					]
+				},
+				"description": "Defining a Gateway.  Associate an instance, configure ingress on this Gateway to a specific URI"
+			},
+			"response": []
+		},
+		{
+			"name": "5) Update Instance Name",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"metadata\":{\"name\":\"lb1\",\"displayName\":\"new-NGINX_1\"}}"
+				},
+				"url": {
+					"raw": "https://{{host}}/api/v1/infrastructure/locations/unspecified/instances/lb1",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"infrastructure",
+						"locations",
+						"unspecified",
+						"instances",
+						"lb1"
+					]
+				},
+				"description": "Defining a Gateway.  Associate an instance, configure ingress on this Gateway to a specific URI"
+			},
+			"response": []
+		},
+		{
+			"name": "6) Create App - test-app",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"metadata\": {\n        \"name\": \"test-app\",\n        \"displayName\": \"Test App\",\n        \"description\": \"Training Test App via API\"\n    }\n}"
+				},
+				"url": {
+					"raw": "https://{{host}}/api/v1/services/environments/test-env/apps/test-app",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"services",
+						"environments",
+						"test-env",
+						"apps",
+						"test-app"
+					]
+				},
+				"description": "Defining a Gateway.  Associate an instance, configure ingress on this Gateway to a specific URI"
+			},
+			"response": []
+		},
+		{
+			"name": "7) Create Cert - test-cert",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"metadata\": {\r\n    \"name\": \"test-cert\",\r\n    \"displayName\": \"Test Certificate\",\r\n    \"description\": \"Training Test Certificate\"\r\n  },\r\n  \"desiredState\": {\r\n    \"type\": \"PEM\",\r\n    \"privateKey\": \"-----BEGIN PRIVATE KEY-----\\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDKVy9q3yU4fUgLjYC0xxe4JJZPyFUAATHj/pHAeQwHbxc1y7XXzGzIHunn2qkyIfM+a/AnQlqdzhjhWGkdLX8kUZ2NbULo9SFirxySIMDVgKeJc6KqCwR4xwFKFTLvlA8pBfVMy8ECMqnPu1W+N5CghyNT0C3A2ZCO3FAZ/BUV3kwWN5a8b+aWvG4UkojUC+RaGhlBUuNif9JB6QCS47ubyfMHUctnvkprMGQRW+KiZFU5dTNp+jeESCyuLZV02JM5/5NSlS2d32mPka0ccv/aAHnqDcWolj12uiSj2eDYd0LKHl5CB8So773P8jMW2aA2kCLKGq5qAxXJb336nc8pAgMBAAECggEAJ8ptcL7hOvKoMF1raiGc8IGBbb8fuBiEDyoIz6j+TJf0IIgnAoEZA2HQ7d96VnmGtEfVumK6Hz5gdjBEu5Au6J2ENkO+XMGYBygYnkQCp/nc+JLc8kOoZXf9MOxqT+L1+ENLsgZ/tkbwTgGxIu8aafcpY1oVJU+jtfRtbC6+lsX+ZO9SY5Yec+lewWytcL/X4hrG0pNa4y0abeJDJ7sKHT/lqXKhMkTkyb7RPj2aZy8LPDMZI1xnUyW8RqdKFNT/F0/DDgeOnQCPq3NfudO2AhWRTIrqIeDDQl8v8jEh6q03ZOnQUsvU9BI5L47qX8OFXGsLdCmBaPtY3Mn8fN84AQKBgQD/VA2pbB/GgCjK5TN6eLgwZhnzKZkhM5FoL5zh6Kg85009A5MSPW+qEPvU5WFbybLIbvJGda0Da61qDPyxwKXrDuvITGuPNZBbfDhIGFyA+bSocksQ3xYhgCMpfqLwrjCKUxoCDP7r6oGYSMdnuW6pB8/jHmW0VySD/MYKDy3YoQKBgQDK33K4VvodqgvgoHH9FkGTLfLw6UgH+Q/VHaU/CuJPqaQ4nCGrj5G0Pip9HWHNyHTMm4IGaP0PjmnUBbVnWzpdjhl3e4sYhEr9T4PCglngK914HrBMm4TGP/TZbfkKoIVJ+1ztMroxQdz1qVSMdrnXPlDbanTTkZVGytt7upRBiQKBgBkUA2eBpDlV+yu6iWzdEJJIZQIaMt0s+Ho4OvuBY4zf1xlIEZj4CdC1bFbD1OU0EWhYZVmAU2cDm3vQHL3Ew0csJwJ8ZxAg3bXupISISAWvAQyOdUsJ7l2J/Wok8xIauc/MS8Cp0BwR43q2o0dP0kut5cBUCv9Ek+SW3ki8pu8hAoGBAKnWUMMURYWqAxGFIIiBJlqhn/2hPmU2U9PVYq6ZXQbV/R5LT0DCC3e6h3WAsI1HIMjd8weMwzZPwjb2pHwneoAx4w4NBlB7CBByjdq7p6Qs9NaH0o3/sDML/d48273SzmM2JQCKdCeifOnIXXjOOByDFcvqnm00NqUyVHaLp2wJAoGBAOd0nKdg/n73vyA1XwawstM/cGZQFDyqkJYY74mLAN00VStL4JoOWV+SQLqosz/ST1wZS1qMtyjYhY1s4+gmP4LdNjlFmtO1Tz8Gq9YPES8yah0pru70nG3RJZgz85AfPqUFwDnNeNiYlT2D1ZSL+jB+fZm001l8NEu7PjwECBBZ\\n-----END PRIVATE KEY-----\\n\",\r\n    \"publicCert\": \"-----BEGIN CERTIFICATE-----\\nMIIDjDCCAnQCCQCGmEZN3PdqMDANBgkqhkiG9w0BAQsFADCBhzELMAkGA1UEBhMC\\nVVMxCzAJBgNVBAgMAkNBMQswCQYDVQQHDAJTRjEOMAwGA1UECgwFTkdJTlgxETAP\\nBgNVBAsMCFRyYWluaW5nMRgwFgYDVQQDDA93d3cuZXhhbXBsZS5jb20xITAfBgkq\\nhkiG9w0BCQEWEnRyYWluaW5nQG5naW54LmNvbTAeFw0yMDAzMDMyMjE3MDVaFw0y\\nMTAzMDMyMjE3MDVaMIGHMQswCQYDVQQGEwJVUzELMAkGA1UECAwCQ0ExCzAJBgNV\\nBAcMAlNGMQ4wDAYDVQQKDAVOR0lOWDERMA8GA1UECwwIVHJhaW5pbmcxGDAWBgNV\\nBAMMD3d3dy5leGFtcGxlLmNvbTEhMB8GCSqGSIb3DQEJARYSdHJhaW5pbmdAbmdp\\nbnguY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAylcvat8lOH1I\\nC42AtMcXuCSWT8hVAAEx4/6RwHkMB28XNcu118xsyB7p59qpMiHzPmvwJ0Janc4Y\\n4VhpHS1/JFGdjW1C6PUhYq8ckiDA1YCniXOiqgsEeMcBShUy75QPKQX1TMvBAjKp\\nz7tVvjeQoIcjU9AtwNmQjtxQGfwVFd5MFjeWvG/mlrxuFJKI1AvkWhoZQVLjYn/S\\nQekAkuO7m8nzB1HLZ75KazBkEVviomRVOXUzafo3hEgsri2VdNiTOf+TUpUtnd9p\\nj5GtHHL/2gB56g3FqJY9droko9ng2HdCyh5eQgfEqO+9z/IzFtmgNpAiyhquagMV\\nyW99+p3PKQIDAQABMA0GCSqGSIb3DQEBCwUAA4IBAQCLO0H+TSh5lTf2or5BOVpS\\nLZCP+OIvWIbk1nfgKD/Z12+jUKr2GSuoqH7YvfZxakpROl3Z0uJpVQcKxGxFcupX\\nxhNPB6F4UGDYhHdsRxzqGQwX9gwwL7CZAZdMrIAa/EEJIb/5ZDOas7+67YuYSoBi\\nHTcWZjDZlJq3H5FX1KRFcv/EhOSV8ZQZlStkYN/4dF3CSWS46s6d157KoGXAIaHa\\nnDOwA4qy4W3KrHf5gShQN9UnuVhpjyZQFZ4D14iFgugjnmLPqNF10sXL+DrCJ5nV\\nTgF17jpE1jjkEKXTDTLzWFYiYjvnTW8sMGxtx6W5lIgH2wCIbfIGrzWEsNBWhXfx\\n-----END CERTIFICATE-----\\n\",\r\n    \"password\": \"\",\r\n    \"caCerts\": []\r\n  }\r\n}\r\n"
+				},
+				"url": {
+					"raw": "https://{{host}}/api/v1/services/environments/test-env/certs/test-cert",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"services",
+						"environments",
+						"test-env",
+						"certs",
+						"test-cert"
+					]
+				},
+				"description": "Create or Add a certificate to the Controller"
+			},
+			"response": []
+		},
+		{
+			"name": "8) Create Gateway - test-gw",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"metadata\": {\n        \"name\": \"test-gw\",\n        \"displayName\": \"Test Gateway\"\n    },\n    \"desiredState\": {\n        \"ingress\": {\n            \"uris\": {\n                \"http://ec2-54-193-43-91.us-west-1.compute.amazonaws.com\": {\n               }             \n            },\n            \"tls\": {\n                \"certRef\": {\n                    \"ref\": \"/services/environments/test-env/certs/test-cert\"\n                }            \n            },               \n            \"placement\": {\n                \"instanceRefs\": [\n                    {\n                        \"ref\": \"/infrastructure/locations/unspecified/instances/lb1\"\n                    }                 \n                ]\n            }\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "https://{{host}}/api/v1/services/environments/test-env/gateways/test-gw",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"services",
+						"environments",
+						"test-env",
+						"gateways",
+						"test-gw"
+					]
+				},
+				"description": "Create or Add a certificate to the Controller"
+			},
+			"response": []
+		},
+		{
+			"name": "9) Create Comp - test-comp",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"metadata\": {\n        \"name\": \"test-comp\",\n        \"displayName\": \"Test Component\"\n    },\n    \"desiredState\": {\n        \"ingress\": {\n            \"uris\": {\n                \"/\": {\n                }    \n            },\n            \"gatewayRefs\": [\n                    {\n                        \"ref\": \"/services/environments/test-env/gateways/test-gw\"\n                    }                   \n                ]\n        },\n        \"backend\": {\n            \"workloadGroups\": {\n                \"test-workloadgroup\": {\n                    \"uris\": {\n                        \"https://172.31.18.80\":{\n                        },\n                        \"https://172.31.23.28\": {\n                        }\n                    }\n                }\n            }\n        }        \n    }    \n}"
+				},
+				"url": {
+					"raw": "https://{{host}}/api/v1/services/environments/test-env/apps/test-app/components/test-comp",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"services",
+						"environments",
+						"test-env",
+						"apps",
+						"test-app",
+						"components",
+						"test-comp"
+					]
+				},
+				"description": "Defining a Gateway.  Associate an instance, configure ingress on this Gateway to a specific URI"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Comp - test-comp",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{host}}/api/v1/services/environments/test-env/apps/test-app/components/test-comp",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"services",
+						"environments",
+						"test-env",
+						"apps",
+						"test-app",
+						"components",
+						"test-comp"
+					]
+				},
+				"description": "Defining a Gateway.  Associate an instance, configure ingress on this Gateway to a specific URI"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
