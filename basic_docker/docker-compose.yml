@@ -1,6 +1,5 @@
 version: '3'
 services:
-    # HTTP App (httpbin) listening on container port 80 & host mapping to 8080
     app1:
         image: ianwijaya/hackazon
         hostname: app1
